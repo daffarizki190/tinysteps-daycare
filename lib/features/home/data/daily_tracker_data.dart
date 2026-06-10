@@ -1,0 +1,86 @@
+import 'package:flutter/material.dart';
+
+/// Simulasi data JSON – Pertemuan 6: JSON Data
+/// Setiap Map merepresentasikan satu record aktivitas harian anak.
+final List<Map<String, dynamic>> dailyTrackerData = [
+  {
+    'time': '07:00 AM',
+    'activity': 'Good Morning Circle',
+    'desc': 'Greetings, songs & roll call',
+    'icon': Icons.wb_sunny_rounded,
+    'color': const Color(0xFFFFD166),
+    'bgColor': const Color(0xFFFFF8E1),
+  },
+  {
+    'time': '08:00 AM',
+    'activity': 'Breakfast Time',
+    'desc': 'Warm oatmeal & fresh fruit',
+    'icon': Icons.breakfast_dining_rounded,
+    'color': const Color(0xFFFF6B6B),
+    'bgColor': const Color(0xFFFFEBEB),
+  },
+  {
+    'time': '09:00 AM',
+    'activity': 'Creative Play',
+    'desc': 'Finger painting & clay sculpting',
+    'icon': Icons.palette_rounded,
+    'color': const Color(0xFFAB83F5),
+    'bgColor': const Color(0xFFF3ECFF),
+  },
+  {
+    'time': '10:30 AM',
+    'activity': 'Outdoor Exploration',
+    'desc': 'Nature walk & sandbox play',
+    'icon': Icons.nature_people_rounded,
+    'color': const Color(0xFF6F9E77),
+    'bgColor': const Color(0xFFD4E8D7),
+  },
+  {
+    'time': '12:00 PM',
+    'activity': 'Nap Time',
+    'desc': 'Rest & quiet music',
+    'icon': Icons.bedtime_rounded,
+    'color': const Color(0xFF4FC3F7),
+    'bgColor': const Color(0xFFE1F5FE),
+  },
+  {
+    'time': '12:30 PM',
+    'activity': 'Lunch Time',
+    'desc': 'Organic purees & steamed veg',
+    'icon': Icons.restaurant_rounded,
+    'color': const Color(0xFFFF9800),
+    'bgColor': const Color(0xFFFFF3E0),
+  },
+  {
+    'time': '02:00 PM',
+    'activity': 'Story Time',
+    'desc': 'Interactive reading & puppetry',
+    'icon': Icons.menu_book_rounded,
+    'color': const Color(0xFF26C6DA),
+    'bgColor': const Color(0xFFE0F7FA),
+  },
+  {
+    'time': '03:30 PM',
+    'activity': 'Snack Break',
+    'desc': 'Apple slices & cheese cubes',
+    'icon': Icons.local_cafe_rounded,
+    'color': const Color(0xFFEF9A9A),
+    'bgColor': const Color(0xFFFCE4EC),
+  },
+  {
+    'time': '04:00 PM',
+    'activity': 'Music & Movement',
+    'desc': 'Dance, rhythm & instrument play',
+    'icon': Icons.music_note_rounded,
+    'color': const Color(0xFF7986CB),
+    'bgColor': const Color(0xFFE8EAF6),
+  },
+  {
+    'time': '05:00 PM',
+    'activity': 'Pick-Up & Goodbye',
+    'desc': 'Parent handover & daily recap',
+    'icon': Icons.directions_car_rounded,
+    'color': const Color(0xFF8EB695),
+    'bgColor': const Color(0xFFD4E8D7),
+  },
+];
