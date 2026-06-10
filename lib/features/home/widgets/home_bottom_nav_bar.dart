@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 
-/// Custom Bottom Navigation Bar untuk HomePage.
-///
-/// [selectedIndex]   : tab yang sedang aktif
-/// [onTabSelected]   : callback ketika tab ditekan
+
+
+
+
 class HomeBottomNavBar extends StatelessWidget {
   const HomeBottomNavBar({
     super.key,
@@ -15,7 +15,7 @@ class HomeBottomNavBar extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int> onTabSelected;
 
-  // Daftar item tab
+
   static const List<Map<String, dynamic>> _navItems = [
     {'icon': Icons.home_rounded, 'label': 'Home'},
     {'icon': Icons.analytics_rounded, 'label': 'Tracker'},
@@ -57,7 +57,7 @@ class HomeBottomNavBar extends StatelessWidget {
   }
 }
 
-// ── Private: satu item di nav bar ──
+
 class _NavBarItem extends StatelessWidget {
   const _NavBarItem({
     required this.icon,
@@ -83,7 +83,7 @@ class _NavBarItem extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Icon dengan background pill jika aktif
+
             AnimatedContainer(
               duration: const Duration(milliseconds: 250),
               curve: Curves.bounceOut,
@@ -101,7 +101,7 @@ class _NavBarItem extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 2),
-            // Label
+
             AnimatedDefaultTextStyle(
               duration: const Duration(milliseconds: 200),
               style: TextStyle(

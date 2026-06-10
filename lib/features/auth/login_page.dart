@@ -28,7 +28,7 @@ class _LoginPageState extends State<LoginPage>
 
   bool _obscurePassword = true;
 
-  // Controller untuk pre-fill field dengan nilai 'test'
+
   final TextEditingController _emailController =
       TextEditingController(text: 'test');
   final TextEditingController _passwordController =
@@ -66,7 +66,7 @@ class _LoginPageState extends State<LoginPage>
 
   void _handleSignIn() {
     setState(() {
-      // Shortcut testing: langsung masuk jika email & password = 'test'
+
       if (email == 'test' && password == 'test') {
         errorMessage = '';
         Navigator.pushReplacement(
@@ -76,7 +76,7 @@ class _LoginPageState extends State<LoginPage>
         return;
       }
 
-      // Validasi normal untuk kredensial selain 'test'
+
       if (email.isEmpty || password.isEmpty) {
         errorMessage = 'Email and password cannot be empty';
       } else if (!AppUtils.isValidEmail(email)) {

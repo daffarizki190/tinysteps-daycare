@@ -12,7 +12,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   int _selectedTab = 0;
   String _selectedClassroom = 'Classroom A';
 
-  // Animation controllers for premium micro-animations
+
   late AnimationController _homeFadeController;
   late Animation<double> _homeFadeAnimation;
 
@@ -81,7 +81,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  // ── Common AppBar ───────────────────────────
+
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
       backgroundColor: Colors.white,
@@ -90,7 +90,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       titleSpacing: 16,
       title: Row(
         children: [
-          // User avatar
+
           Container(
             width: 40,
             height: 40,
@@ -173,7 +173,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  // ── Tab 0: Home ─────────────────────────────
+
   Widget _buildHomeTab() {
     return FadeTransition(
       opacity: _homeFadeAnimation,
@@ -183,11 +183,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Liam's Status Card
+
             _buildLiamStatusCard(),
             const SizedBox(height: 24),
 
-            // Quick Actions Section
+
             const Text(
               'QUICK ACTIONS',
               style: TextStyle(
@@ -201,7 +201,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             _buildQuickActionsRow(),
             const SizedBox(height: 24),
 
-            // Upcoming Schedule Section
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -258,7 +258,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Card Header
+
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -288,11 +288,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ],
           ),
           const SizedBox(height: 16),
-          // Card Body
+
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Icon Circle (Sleep Tracker/Moon)
+
               Container(
                 width: 48,
                 height: 48,
@@ -307,7 +307,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 ),
               ),
               const SizedBox(width: 14),
-              // Status details
+
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -321,7 +321,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    // Progress Bar
+
                     ClipRRect(
                       borderRadius: BorderRadius.circular(4),
                       child: const LinearProgressIndicator(
@@ -517,7 +517,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  // ── Tab 1: Tracker ──────────────────────────
+
   Widget _buildTrackerTab() {
     return FadeTransition(
       opacity: _trackerFadeAnimation,
@@ -527,7 +527,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Live Camera Title + Dropdown Selector
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -544,11 +544,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ),
             const SizedBox(height: 12),
 
-            // Live Camera Feed Mock
+
             _buildLiveCameraFeed(),
             const SizedBox(height: 28),
 
-            // Daily Tracker Header
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -572,7 +572,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ),
             const SizedBox(height: 16),
 
-            // Timeline Tracker list
+
             _buildTimelineTracker(),
           ],
         ),
@@ -636,7 +636,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       ),
       child: Stack(
         children: [
-          // Live indicator
+
           Positioned(
             top: 12,
             left: 12,
@@ -671,7 +671,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               ),
             ),
           ),
-          // Play Overlay button
+
           Center(
             child: Container(
               width: 54,
@@ -700,7 +700,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   Widget _buildTimelineTracker() {
-    // Custom timeline items matching Figma
+
     final List<Map<String, dynamic>> items = [
       {
         'time': '12:00 PM',
@@ -740,7 +740,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Timeline vertical line & point indicator
+
               Column(
                 children: [
                   Container(
@@ -783,7 +783,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 ],
               ),
               const SizedBox(width: 16),
-              // Timeline card detail
+
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 20.0),
@@ -881,7 +881,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  // ── Common Placeholder View ─────────────────
+
   Widget _buildComingSoonTab(IconData icon, String label) {
     return Center(
       child: Column(
@@ -918,7 +918,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  // ── Custom Bottom Nav Bar ───────────────────
+
   Widget _buildBottomNavBar() {
     final List<Map<String, dynamic>> items = [
       {'icon': Icons.home_rounded, 'label': 'Home'},

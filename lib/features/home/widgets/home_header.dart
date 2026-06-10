@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 
-/// Widget header halaman Home:
-/// - Baris greeting + avatar
-/// - Tiga summary chip (jumlah aktivitas, jam operasional, jumlah anak)
+
+
+
 class HomeHeader extends StatelessWidget {
   const HomeHeader({super.key});
 
@@ -21,10 +21,10 @@ class HomeHeader extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ── Greeting row ──
+
           Row(
             children: [
-              // Avatar
+
               Container(
                 width: 46,
                 height: 46,
@@ -65,7 +65,7 @@ class HomeHeader extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 14),
-          // ── Summary chips ──
+
           Row(
             children: [
               _SummaryChip(
@@ -93,7 +93,7 @@ class HomeHeader extends StatelessWidget {
   }
 }
 
-// ── Private helper: satu chip summary ──
+
 class _SummaryChip extends StatelessWidget {
   const _SummaryChip({
     required this.icon,

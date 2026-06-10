@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 
-/// Satu kartu item di dalam ListView Daily Tracker.
-///
-/// Menerima data Map dari [dailyTrackerData] dan dua [Animation] untuk:
-/// - [offsetAnimation]  : geser vertikal (bounceOut)
-/// - [opacityAnimation] : fade-in
+
+
+
+
+
 class TrackerItemCard extends StatelessWidget {
   const TrackerItemCard({
     super.key,
@@ -52,7 +52,7 @@ class TrackerItemCard extends StatelessWidget {
         child: ListTile(
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-          // ── Leading: icon box ──
+
           leading: Container(
             width: 44,
             height: 44,
@@ -66,7 +66,7 @@ class TrackerItemCard extends StatelessWidget {
               size: 22,
             ),
           ),
-          // ── Title & subtitle ──
+
           title: Text(
             data['activity'] as String,
             style: const TextStyle(
@@ -87,7 +87,7 @@ class TrackerItemCard extends StatelessWidget {
               ),
             ),
           ),
-          // ── Trailing: time badge ──
+
           trailing: Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
             decoration: BoxDecoration(
