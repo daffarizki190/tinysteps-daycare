@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 
 
-
-
-
-
+// Widget kartu item untuk Daily Tracker dengan animasi staggered (slide + fade)
 class TrackerItemCard extends StatelessWidget {
   const TrackerItemCard({
     super.key,

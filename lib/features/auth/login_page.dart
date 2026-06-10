@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../core/utils/utils.dart';
 import '../home/home_page.dart';
 
+// Warna lokal untuk halaman login (tidak bergantung pada AppColors)
 const Color _kBackground       = Color(0xFFF7FAF8);
 const Color _kPrimaryGreen     = Color(0xFF85B38B);
 const Color _kPrimaryGreenDark = Color(0xFF5E8C64);
@@ -22,18 +23,20 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage>
     with SingleTickerProviderStateMixin {
 
+  // State untuk form input
   String email        = 'test';
   String password     = 'test';
   String errorMessage = '';
 
   bool _obscurePassword = true;
 
-
+  // Controller untuk membaca nilai input email dan password
   final TextEditingController _emailController =
       TextEditingController(text: 'test');
   final TextEditingController _passwordController =
       TextEditingController(text: 'test');
 
+  // Controller animasi slide dari atas menggunakan Curves.bounceOut
   late AnimationController _animationController;
   late Animation<double>   _slideAnimation;
 
@@ -64,9 +67,10 @@ class _LoginPageState extends State<LoginPage>
     super.dispose();
   }
 
+  // Validasi login: cek shortcut test, lalu validasi format email dan panjang password
   void _handleSignIn() {
     setState(() {
-
+      // Shortcut login untuk keperluan demo/testing
       if (email == 'test' && password == 'test') {
         errorMessage = '';
         Navigator.pushReplacement(
@@ -160,6 +164,7 @@ class _LoginPageState extends State<LoginPage>
     );
   }
 
+  // Menampilkan logo dari assets; jika gagal load, tampilkan ikon fallback
   Widget _buildLogo() {
     return Image.asset(
       'assets/images/daycare_kita_logo.png',
@@ -180,6 +185,7 @@ class _LoginPageState extends State<LoginPage>
     );
   }
 
+  // Form input email dan password dengan validasi border warna
   Widget _buildForm() {
     OutlineInputBorder border(Color color, {double width = 1}) {
       return OutlineInputBorder(

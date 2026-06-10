@@ -12,7 +12,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   int _selectedTab = 0;
   String _selectedClassroom = 'Classroom A';
 
-
+  // AnimationController untuk fade-in saat berpindah tab
   late AnimationController _homeFadeController;
   late Animation<double> _homeFadeAnimation;
 
@@ -45,11 +45,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   void dispose() {
+    // Wajib dispose agar tidak terjadi memory leak
     _homeFadeController.dispose();
     _trackerFadeController.dispose();
     super.dispose();
   }
 
+  // Ganti tab aktif dan jalankan animasi fade sesuai tab yang dipilih
   void _onTabSelected(int index) {
     setState(() {
       _selectedTab = index;
@@ -81,7 +83,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-
+  // AppBar dengan avatar orang tua, nama app, dan notifikasi
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
       backgroundColor: Colors.white,
@@ -174,6 +176,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
 
+  // Tab utama Home: StatusCard + QuickActions + Upcoming Schedule
   Widget _buildHomeTab() {
     return FadeTransition(
       opacity: _homeFadeAnimation,

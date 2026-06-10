@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 
 
-
-
+// Widget header halaman home: menampilkan salam, avatar, dan summary chip aktivitas hari ini
 class HomeHeader extends StatelessWidget {
   const HomeHeader({super.key});
 
@@ -93,7 +92,7 @@ class HomeHeader extends StatelessWidget {
   }
 }
 
-
+// Chip kecil untuk menampilkan ringkasan: jumlah aktivitas, jam operasional, jumlah anak
 class _SummaryChip extends StatelessWidget {
   const _SummaryChip({
     required this.icon,
