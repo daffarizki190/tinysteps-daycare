@@ -130,7 +130,7 @@ flutter run
 
 ## 👨‍💻 Pengembang
 
-Proyek ini dikembangkan sebagai tugas mata kuliah **Pemrograman Mobile**.
+Proyek ini dikembangkan sebagai tugas mata kuliah **Mobile Computing**.
 
 ---
 
