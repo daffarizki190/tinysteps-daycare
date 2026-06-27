@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 
-
-// Widget kartu item untuk Daily Tracker dengan animasi staggered (slide + fade)
 class TrackerItemCard extends StatelessWidget {
   const TrackerItemCard({
     super.key,
@@ -15,7 +13,7 @@ class TrackerItemCard extends StatelessWidget {
   final Map<String, dynamic> data;
   final Animation<double> offsetAnimation;
   final Animation<double> opacityAnimation;
-  final Animation<double> controller; // parent controller untuk AnimatedBuilder
+  final Animation<double> controller;
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +45,10 @@ class TrackerItemCard extends StatelessWidget {
           ],
         ),
         child: ListTile(
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 14,
+            vertical: 6,
+          ),
 
           leading: Container(
             width: 44,
@@ -57,11 +57,7 @@ class TrackerItemCard extends StatelessWidget {
               color: bgColor,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(
-              data['icon'] as IconData,
-              color: iconColor,
-              size: 22,
-            ),
+            child: Icon(data['icon'] as IconData, color: iconColor, size: 22),
           ),
 
           title: Text(

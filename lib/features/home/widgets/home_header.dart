@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 
-
-// Widget header halaman home: menampilkan salam, avatar, dan summary chip aktivitas hari ini
 class HomeHeader extends StatelessWidget {
   const HomeHeader({super.key});
 
@@ -12,18 +10,14 @@ class HomeHeader extends StatelessWidget {
       width: double.infinity,
       decoration: const BoxDecoration(
         color: Colors.white,
-        border: Border(
-          bottom: BorderSide(color: Color(0xFFEEF0F2)),
-        ),
+        border: Border(bottom: BorderSide(color: Color(0xFFEEF0F2))),
       ),
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
           Row(
             children: [
-
               Container(
                 width: 46,
                 height: 46,
@@ -92,7 +86,6 @@ class HomeHeader extends StatelessWidget {
   }
 }
 
-// Chip kecil untuk menampilkan ringkasan: jumlah aktivitas, jam operasional, jumlah anak
 class _SummaryChip extends StatelessWidget {
   const _SummaryChip({
     required this.icon,

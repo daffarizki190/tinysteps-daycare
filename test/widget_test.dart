@@ -11,8 +11,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tinysteps/main.dart';
 
 void main() {
-  testWidgets('Login page smoke test — elemen dasar tampil dengan benar',
-      (WidgetTester tester) async {
+  testWidgets('Login page smoke test — elemen dasar tampil dengan benar', (
+    WidgetTester tester,
+  ) async {
     // Build aplikasi menggunakan class root yang benar: TinyStepsApp
     await tester.pumpWidget(const TinyStepsApp());
 
@@ -29,8 +30,9 @@ void main() {
     expect(find.byType(TextField), findsNWidgets(2));
   });
 
-  testWidgets('Validasi — error muncul jika form kosong saat Sign In ditekan',
-      (WidgetTester tester) async {
+  testWidgets('Validasi — error muncul jika form kosong saat Sign In ditekan', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(const TinyStepsApp());
     await tester.pumpAndSettle();
 
@@ -39,9 +41,6 @@ void main() {
     await tester.pump();
 
     // Pesan error harus muncul
-    expect(
-      find.text('Email and password cannot be empty'),
-      findsOneWidget,
-    );
+    expect(find.text('Email and password cannot be empty'), findsOneWidget);
   });
 }

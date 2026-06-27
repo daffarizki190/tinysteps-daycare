@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import '../../core/utils/utils.dart';
+import 'package:provider/provider.dart';
+import 'login_provider.dart';
 import '../home/home_page.dart';
 
-// Warna lokal untuk halaman login (tidak bergantung pada AppColors)
-const Color _kBackground       = Color(0xFFF7FAF8);
-const Color _kPrimaryGreen     = Color(0xFF85B38B);
+const Color _kBackground = Color(0xFFF7FAF8);
+const Color _kPrimaryGreen = Color(0xFF85B38B);
 const Color _kPrimaryGreenDark = Color(0xFF5E8C64);
-const Color _kSurface          = Color(0xFFFFFFFF);
-const Color _kTextTitle        = Color(0xFF1B1C1C);
-const Color _kTextSecondary    = Color(0xFF6B7280);
-const Color _kPlaceholder      = Color(0xFFC2C9BE);
-const Color _kBorder           = Color(0xFFE5E7EB);
-const Color _kError            = Color(0xFFEF4444);
+const Color _kSurface = Color(0xFFFFFFFF);
+const Color _kTextTitle = Color(0xFF1B1C1C);
+const Color _kTextSecondary = Color(0xFF6B7280);
+const Color _kPlaceholder = Color(0xFFC2C9BE);
+const Color _kBorder = Color(0xFFE5E7EB);
+const Color _kError = Color(0xFFEF4444);
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -22,23 +22,18 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage>
     with SingleTickerProviderStateMixin {
-
-  // State untuk form input
-  String email        = 'test';
-  String password     = 'test';
-  String errorMessage = '';
+  String email = 'test';
+  String password = 'test';
 
   bool _obscurePassword = true;
-
-  // Controller untuk membaca nilai input email dan password
-  final TextEditingController _emailController =
-      TextEditingController(text: 'test');
-  final TextEditingController _passwordController =
-      TextEditingController(text: 'test');
-
-  // Controller animasi slide dari atas menggunakan Curves.bounceOut
+  final TextEditingController _emailController = TextEditingController(
+    text: 'test',
+  );
+  final TextEditingController _passwordController = TextEditingController(
+    text: 'test',
+  );
   late AnimationController _animationController;
-  late Animation<double>   _slideAnimation;
+  late Animation<double> _slideAnimation;
 
   @override
   void initState() {
@@ -50,10 +45,7 @@ class _LoginPageState extends State<LoginPage>
     );
 
     _slideAnimation = Tween<double>(begin: -500.0, end: 0.0).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.bounceOut,
-      ),
+      CurvedAnimation(parent: _animationController, curve: Curves.bounceOut),
     );
 
     _animationController.forward();
@@ -67,34 +59,19 @@ class _LoginPageState extends State<LoginPage>
     super.dispose();
   }
 
-  // Validasi login: cek shortcut test, lalu validasi format email dan panjang password
-  void _handleSignIn() {
-    setState(() {
-      // Shortcut login untuk keperluan demo/testing
-      if (email == 'test' && password == 'test') {
-        errorMessage = '';
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
-        );
-        return;
-      }
+  /// Menggunakan context.read untuk memanggil login di LoginProvider (Materi Provider)
+  Future<void> _handleSignIn() async {
+    final loginProvider = context.read<LoginProvider>();
+    final success = await loginProvider.login(email, password);
 
-
-      if (email.isEmpty || password.isEmpty) {
-        errorMessage = 'Email and password cannot be empty';
-      } else if (!AppUtils.isValidEmail(email)) {
-        errorMessage = 'Please enter a valid email address';
-      } else if (!AppUtils.isValidPassword(password)) {
-        errorMessage = 'Password must be at least 6 characters';
-      } else {
-        errorMessage = '';
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
-        );
-      }
-    });
+    if (success && mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const HomePage(),
+        ),
+      );
+    }
   }
 
   @override
@@ -147,9 +124,14 @@ class _LoginPageState extends State<LoginPage>
                   const SizedBox(height: 20),
                   _buildSignInButton(),
                   const SizedBox(height: 6),
-                  errorMessage.isNotEmpty
-                      ? _buildErrorMessage()
-                      : const SizedBox.shrink(),
+                  // Menggunakan Consumer untuk mendengarkan error message dari Provider
+                  Consumer<LoginProvider>(
+                    builder: (context, provider, child) {
+                      return provider.errorMessage.isNotEmpty
+                          ? _buildErrorMessage(provider.errorMessage)
+                          : const SizedBox.shrink();
+                    },
+                  ),
                   const SizedBox(height: 28),
                   _buildOrDivider(),
                   const SizedBox(height: 20),
@@ -164,7 +146,6 @@ class _LoginPageState extends State<LoginPage>
     );
   }
 
-  // Menampilkan logo dari assets; jika gagal load, tampilkan ikon fallback
   Widget _buildLogo() {
     return Image.asset(
       'assets/images/daycare_kita_logo.png',
@@ -179,13 +160,16 @@ class _LoginPageState extends State<LoginPage>
             color: const Color(0xFFD4E8D7),
             border: Border.all(color: _kPrimaryGreen, width: 2.5),
           ),
-          child: const Icon(Icons.park_rounded, size: 56, color: _kPrimaryGreenDark),
+          child: const Icon(
+            Icons.park_rounded,
+            size: 56,
+            color: _kPrimaryGreenDark,
+          ),
         );
       },
     );
   }
 
-  // Form input email dan password dengan validasi border warna
   Widget _buildForm() {
     OutlineInputBorder border(Color color, {double width = 1}) {
       return OutlineInputBorder(
@@ -216,20 +200,17 @@ class _LoginPageState extends State<LoginPage>
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
             onChanged: (value) => setState(() => email = value),
-            style: const TextStyle(
-              fontSize: 16,
-              color: _kTextTitle,
-            ),
+            style: const TextStyle(fontSize: 16, color: _kTextTitle),
             decoration: InputDecoration(
               hintText: 'parent@example.com',
               hintStyle: hintStyle,
               filled: true,
               fillColor: _kSurface,
               contentPadding: fieldPadding,
-              border:         border(_kBorder),
-              enabledBorder:  border(_kBorder),
-              focusedBorder:  border(_kPrimaryGreen, width: 2),
-              errorBorder:    border(_kError),
+              border: border(_kBorder),
+              enabledBorder: border(_kBorder),
+              focusedBorder: border(_kPrimaryGreen, width: 2),
+              errorBorder: border(_kError),
             ),
           ),
         ),
@@ -239,8 +220,7 @@ class _LoginPageState extends State<LoginPage>
           children: [
             _buildLabel('Password'),
             GestureDetector(
-              onTap: () {
-              },
+              onTap: () {},
               child: const Text(
                 'Forgot Password?',
                 style: TextStyle(
@@ -260,10 +240,7 @@ class _LoginPageState extends State<LoginPage>
             controller: _passwordController,
             obscureText: _obscurePassword,
             onChanged: (value) => setState(() => password = value),
-            style: const TextStyle(
-              fontSize: 16,
-              color: _kTextTitle,
-            ),
+            style: const TextStyle(fontSize: 16, color: _kTextTitle),
             decoration: InputDecoration(
               hintText: '••••••••',
               hintStyle: hintStyle,
@@ -285,10 +262,10 @@ class _LoginPageState extends State<LoginPage>
               filled: true,
               fillColor: _kSurface,
               contentPadding: fieldPadding,
-              border:         border(_kBorder),
-              enabledBorder:  border(_kBorder),
-              focusedBorder:  border(_kPrimaryGreen, width: 2),
-              errorBorder:    border(_kError),
+              border: border(_kBorder),
+              enabledBorder: border(_kBorder),
+              focusedBorder: border(_kPrimaryGreen, width: 2),
+              errorBorder: border(_kError),
             ),
           ),
         ),
@@ -297,30 +274,45 @@ class _LoginPageState extends State<LoginPage>
   }
 
   Widget _buildSignInButton() {
-    return SizedBox(
-      width: double.infinity,
-      height: 56,
-      child: ElevatedButton(
-        onPressed: _handleSignIn,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: _kPrimaryGreen,
-          foregroundColor: Colors.white,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+    // Menggunakan Consumer untuk mendengarkan isLoading dari Provider
+    return Consumer<LoginProvider>(
+      builder: (context, provider, child) {
+        return SizedBox(
+          width: double.infinity,
+          height: 56,
+          child: ElevatedButton(
+            onPressed: provider.isLoading ? null : _handleSignIn,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: _kPrimaryGreen,
+              foregroundColor: Colors.white,
+              disabledBackgroundColor: _kPrimaryGreen.withValues(alpha: 0.6),
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              textStyle: const TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+                letterSpacing: 0.14,
+              ),
+            ),
+            child: provider.isLoading
+                ? const SizedBox(
+                    width: 22,
+                    height: 22,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.5,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  )
+                : const Text('Sign In'),
           ),
-          textStyle: const TextStyle(
-            fontWeight: FontWeight.w500,
-            fontSize: 14,
-            letterSpacing: 0.14,
-          ),
-        ),
-        child: const Text('Sign In'),
-      ),
+        );
+      },
     );
   }
 
-  Widget _buildErrorMessage() {
+  Widget _buildErrorMessage(String message) {
     return Padding(
       padding: const EdgeInsets.only(top: 6.0),
       child: Row(
@@ -329,7 +321,7 @@ class _LoginPageState extends State<LoginPage>
           const SizedBox(width: 6),
           Expanded(
             child: Text(
-              errorMessage,
+              message,
               style: const TextStyle(
                 fontSize: 13,
                 color: _kError,
@@ -345,9 +337,7 @@ class _LoginPageState extends State<LoginPage>
   Widget _buildOrDivider() {
     return Row(
       children: [
-        const Expanded(
-          child: Divider(color: Color(0xFFD1D5DB), thickness: 1),
-        ),
+        const Expanded(child: Divider(color: Color(0xFFD1D5DB), thickness: 1)),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Text(
@@ -360,9 +350,7 @@ class _LoginPageState extends State<LoginPage>
             ),
           ),
         ),
-        const Expanded(
-          child: Divider(color: Color(0xFFD1D5DB), thickness: 1),
-        ),
+        const Expanded(child: Divider(color: Color(0xFFD1D5DB), thickness: 1)),
       ],
     );
   }
@@ -372,8 +360,7 @@ class _LoginPageState extends State<LoginPage>
       width: double.infinity,
       height: 56,
       child: OutlinedButton(
-        onPressed: () {
-        },
+        onPressed: () {},
         style: OutlinedButton.styleFrom(
           side: const BorderSide(color: _kBorder, width: 1.5),
           shape: RoundedRectangleBorder(

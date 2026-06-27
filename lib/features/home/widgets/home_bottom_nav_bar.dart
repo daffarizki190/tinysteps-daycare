@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 
-
-// Custom bottom navigation bar dengan 5 tab dan animasi AnimatedContainer saat tab aktif
 class HomeBottomNavBar extends StatelessWidget {
   const HomeBottomNavBar({
     super.key,
@@ -12,8 +10,6 @@ class HomeBottomNavBar extends StatelessWidget {
 
   final int selectedIndex;
   final ValueChanged<int> onTabSelected;
-
-  // Daftar item navigasi: ikon dan label untuk 5 tab
   static const List<Map<String, dynamic>> _navItems = [
     {'icon': Icons.home_rounded, 'label': 'Home'},
     {'icon': Icons.analytics_rounded, 'label': 'Tracker'},
@@ -55,7 +51,6 @@ class HomeBottomNavBar extends StatelessWidget {
   }
 }
 
-// Item individu nav bar: ikon berubah ukuran & warna dengan AnimatedContainer saat aktif
 class _NavBarItem extends StatelessWidget {
   const _NavBarItem({
     required this.icon,
@@ -81,7 +76,6 @@ class _NavBarItem extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-
             AnimatedContainer(
               duration: const Duration(milliseconds: 250),
               curve: Curves.bounceOut,
@@ -104,8 +98,7 @@ class _NavBarItem extends StatelessWidget {
               duration: const Duration(milliseconds: 200),
               style: TextStyle(
                 fontSize: 10,
-                fontWeight:
-                    isSelected ? FontWeight.w700 : FontWeight.w400,
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400,
                 color: isSelected ? activeColor : inactiveColor,
               ),
               child: Text(label),
