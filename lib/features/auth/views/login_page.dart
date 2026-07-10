@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../core/utils/utils.dart';
-import '../home/home_page.dart';
+import 'package:provider/provider.dart';
+import '../controllers/auth_controller.dart';
+import '../../home/views/home_page.dart';
 
 // Warna lokal untuk halaman login (tidak bergantung pada AppColors)
 const Color _kBackground       = Color(0xFFF7FAF8);
@@ -67,34 +68,21 @@ class _LoginPageState extends State<LoginPage>
     super.dispose();
   }
 
-  // Validasi login: cek shortcut test, lalu validasi format email dan panjang password
-  void _handleSignIn() {
-    setState(() {
-      // Shortcut login untuk keperluan demo/testing
-      if (email == 'test' && password == 'test') {
-        errorMessage = '';
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
-        );
-        return;
-      }
-
-
-      if (email.isEmpty || password.isEmpty) {
-        errorMessage = 'Email and password cannot be empty';
-      } else if (!AppUtils.isValidEmail(email)) {
-        errorMessage = 'Please enter a valid email address';
-      } else if (!AppUtils.isValidPassword(password)) {
-        errorMessage = 'Password must be at least 6 characters';
-      } else {
-        errorMessage = '';
+  void _handleSignIn() async {
+    final auth = Provider.of<AuthController>(context, listen: false);
+    final success = await auth.login(email, password);
+    if (success) {
+      if (mounted) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const HomePage()),
         );
       }
-    });
+    } else {
+      setState(() {
+        errorMessage = auth.errorMessage;
+      });
+    }
   }
 
   @override
@@ -297,11 +285,12 @@ class _LoginPageState extends State<LoginPage>
   }
 
   Widget _buildSignInButton() {
+    final auth = Provider.of<AuthController>(context);
     return SizedBox(
       width: double.infinity,
       height: 56,
       child: ElevatedButton(
-        onPressed: _handleSignIn,
+        onPressed: auth.isLoading ? null : _handleSignIn,
         style: ElevatedButton.styleFrom(
           backgroundColor: _kPrimaryGreen,
           foregroundColor: Colors.white,
@@ -315,7 +304,13 @@ class _LoginPageState extends State<LoginPage>
             letterSpacing: 0.14,
           ),
         ),
-        child: const Text('Sign In'),
+        child: auth.isLoading
+            ? const SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+              )
+            : const Text('Sign In'),
       ),
     );
   }

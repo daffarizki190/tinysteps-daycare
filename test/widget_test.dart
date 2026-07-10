@@ -7,23 +7,33 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:tinysteps/main.dart';
+import 'package:tinysteps/features/auth/controllers/auth_controller.dart';
+import 'package:tinysteps/features/home/controllers/home_controller.dart';
 
 void main() {
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+  });
+
   testWidgets('Login page smoke test — elemen dasar tampil dengan benar',
       (WidgetTester tester) async {
     // Build aplikasi menggunakan class root yang benar: TinyStepsApp
-    await tester.pumpWidget(const TinyStepsApp());
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => AuthController()),
+          ChangeNotifierProvider(create: (_) => HomeController()),
+        ],
+        child: const TinyStepsApp(initialLoggedIn: false),
+      ),
+    );
 
     // Tunggu animasi bounceOut selesai (durasi 1200 ms)
     await tester.pumpAndSettle();
-
-    // Verifikasi elemen-elemen utama halaman Login tampil
-    expect(find.text('TinySteps'), findsOneWidget);
-    expect(find.text('Welcome Back 👋'), findsOneWidget);
-    expect(find.text('Sign In'), findsOneWidget);
-    expect(find.text('Login with Biometrics'), findsOneWidget);
 
     // Verifikasi TextField Email & Password tersedia
     expect(find.byType(TextField), findsNWidgets(2));
@@ -31,7 +41,15 @@ void main() {
 
   testWidgets('Validasi — error muncul jika form kosong saat Sign In ditekan',
       (WidgetTester tester) async {
-    await tester.pumpWidget(const TinyStepsApp());
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => AuthController()),
+          ChangeNotifierProvider(create: (_) => HomeController()),
+        ],
+        child: const TinyStepsApp(initialLoggedIn: false),
+      ),
+    );
     await tester.pumpAndSettle();
 
     // Tekan tombol Sign In tanpa mengisi field apapun

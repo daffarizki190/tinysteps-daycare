@@ -1,6 +1,6 @@
 # TinySteps Day Care 🌿
 
-Aplikasi mobile **Day Care Management** berbasis Flutter untuk memantau aktivitas harian anak di tempat penitipan anak (daycare). Orang tua dapat memantau status anak, jadwal harian, dan live camera kelas secara real-time.
+Aplikasi mobile **Day Care Management** berbasis Flutter untuk memantau aktivitas harian anak di tempat penitipan anak (daycare). Proyek ini telah dikembangkan untuk memenuhi kriteria Ujian Akhir Semester (UAS) mata kuliah Mobile Computing.
 
 ---
 
@@ -12,56 +12,48 @@ Lihat desain UI/UX lengkap proyek ini di Figma:
 
 ---
 
-## 📱 Fitur Aplikasi
+## 📱 Fitur Aplikasi (UAS Implementation)
 
-### 🔐 Halaman Login
-- Tampilan modern dengan animasi slide-in `bounceOut`
-- Validasi form email dan password
-- Shortcut login cepat (`test` / `test`)
-- Tombol Login with Biometrics
-- Judul halaman: **"Hello, Parents!"**
+Proyek ini telah dikembangkan dengan mengimplementasikan seluruh kriteria UAS:
 
-### 🏠 Halaman Utama (Home Tab)
-- **Liam's Status Card** – Menampilkan status anak (sedang tidur siang), progress bar, dan estimasi bangun
-- **Quick Actions** – Tombol cepat: Check-in, Meals, Activities, Photos
-- **Upcoming Schedule** – Jadwal aktivitas berikutnya (Lunch Time, Outdoor Play)
-
-### 📊 Fitur Utama (Tracker Tab)
-- **Live Camera Feed** – Selector kelas (Classroom A/B/Playground) dengan preview live feed dan badge `● LIVE`
-- **Daily Tracker Timeline** – Timeline vertikal aktivitas harian anak dengan ikon dan tag status
-
-### 🗂️ Navigasi 5 Tab
-| Tab | Label | Ikon |
-|-----|-------|------|
-| 0 | Home | `home_rounded` |
-| 1 | Tracker | `analytics_rounded` |
-| 2 | Photos | `camera_alt_rounded` |
-| 3 | Messages | `chat_bubble_outline_rounded` |
-| 4 | Profile | `person_outline_rounded` |
+1. **Software Architecture (MVC)**
+   - Menerapkan arsitektur Feature-Based MVC.
+   - Terdapat pemisahan yang jelas antara `models/`, `views/`, dan `controllers/`.
+2. **State Management**
+   - Menggunakan `Provider` (`ChangeNotifierProvider`) untuk manajemen state global (`AuthController` & `HomeController`).
+3. **REST API Integration**
+   - Menggunakan package `http` untuk menarik data dari `https://jsonplaceholder.typicode.com/posts`.
+   - Data ditampilkan secara dinamis di halaman Tracker.
+4. **Local Storage**
+   - Menggunakan `shared_preferences` untuk menyimpan status autentikasi/login (`isLoggedIn`).
+   - Apabila pengguna sudah login, aplikasi akan langsung diarahkan ke Home Page saat dibuka kembali.
+5. **Mobile Feature (Camera)**
+   - Menggunakan package `image_picker` (Camera Source).
+   - Pengguna dapat mengetuk (tap) Avatar Profil di sudut kiri atas Home Page untuk membuka kamera perangkat dan mengganti foto profil.
 
 ---
 
-## 🗂️ Struktur Proyek
+## 🗂️ Struktur Proyek MVC
 
 ```
 lib/
-├── main.dart                          # Entry point aplikasi
+├── main.dart                          # Entry point (MultiProvider & Route Config)
 ├── core/
 │   ├── theme/
-│   │   └── app_colors.dart            # Token warna global
 │   └── utils/
-│       └── utils.dart                 # Utility validasi
 └── features/
     ├── auth/
-    │   └── login_page.dart            # Halaman Login
+    │   ├── controllers/
+    │   │   └── auth_controller.dart   # Logic login & shared_preferences
+    │   └── views/
+    │       └── login_page.dart        # Tampilan halaman login
     └── home/
-        ├── home_page.dart             # Halaman Utama (5 tab)
-        ├── data/
-        │   └── daily_tracker_data.dart # Data JSON aktivitas harian
-        └── widgets/
-            ├── home_header.dart        # Widget header + summary chips
-            ├── tracker_item_card.dart  # Kartu item Daily Tracker (animasi staggered)
-            └── home_bottom_nav_bar.dart # Custom Bottom Navigation Bar
+        ├── controllers/
+        │   └── home_controller.dart   # Logic fetch API REST
+        ├── models/
+        │   └── activity_model.dart    # Mapping JSON API ke Objek Dart
+        └── views/
+            └── home_page.dart         # Halaman utama dengan 5 tab & Camera Picker
 ```
 
 ---
@@ -71,7 +63,7 @@ lib/
 ### Prasyarat
 - [Flutter SDK](https://flutter.dev/docs/get-started/install) versi **≥ 3.8.0**
 - Android Studio / VS Code
-- Emulator atau perangkat Android/iOS
+- Emulator atau perangkat keras Android/iOS
 
 ### Langkah Instalasi
 
@@ -87,7 +79,7 @@ flutter pub get
 flutter run
 ```
 
-### Login Akun Testing
+### Akun Testing
 | Field | Value |
 |-------|-------|
 | Email | `test` |
@@ -95,42 +87,20 @@ flutter run
 
 ---
 
-## 🛠️ Teknologi yang Digunakan
+## 🛠️ Package Tambahan (UAS)
 
-| Teknologi | Versi |
+| Package | Deskripsi |
 |-----------|-------|
-| Flutter | ≥ 3.8.0 |
-| Dart | ≥ 3.0 |
-| Material Design 3 | ✅ |
-
-### Package yang Digunakan
-- `cupertino_icons` ^1.0.8 – Ikon gaya iOS
-
----
-
-## 🎨 Palet Warna
-
-| Nama | Hex |
-|------|-----|
-| Primary Green | `#85B38B` |
-| Primary Green Dark | `#5E8C64` |
-| Primary Green Light | `#E2EFE5` |
-| Background | `#F7FAF8` |
-| Text Primary | `#1A1A2E` |
-| Text Secondary | `#6B7280` |
-
----
-
-## 📚 Materi yang Diimplementasikan
-
-- ✅ **Pertemuan 5** – Animasi slide `bounceOut` pada Login Page
-- ✅ **Pertemuan 6** – JSON Data, `ListView.builder`, Navigation Bar, Staggered Animation
+| `provider` | State Management MVC |
+| `http` | REST API Client |
+| `shared_preferences` | Penyimpanan Sesi Lokal |
+| `image_picker` | Akses Kamera Perangkat |
 
 ---
 
 ## 👨‍💻 Pengembang
 
-Proyek ini dikembangkan sebagai tugas mata kuliah **Mobile Computing**.
+Proyek ini dikembangkan oleh **daffarizki190** sebagai tugas Ujian Akhir Semester (UAS) mata kuliah **Mobile Computing**.
 
 ---
 

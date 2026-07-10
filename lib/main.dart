@@ -1,12 +1,30 @@
 import 'package:flutter/material.dart';
-import 'features/auth/login_page.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'features/auth/views/login_page.dart';
+import 'features/home/views/home_page.dart';
+import 'features/auth/controllers/auth_controller.dart';
+import 'features/home/controllers/home_controller.dart';
 
-void main() {
-  runApp(const TinyStepsApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
+  final bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthController()..checkLoginStatus()),
+        ChangeNotifierProvider(create: (_) => HomeController()),
+      ],
+      child: TinyStepsApp(initialLoggedIn: isLoggedIn),
+    ),
+  );
 }
 
 class TinyStepsApp extends StatelessWidget {
-  const TinyStepsApp({super.key});
+  final bool initialLoggedIn;
+  const TinyStepsApp({super.key, required this.initialLoggedIn});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +35,7 @@ class TinyStepsApp extends StatelessWidget {
         useMaterial3: true,
         fontFamily: 'Roboto',
       ),
-      home: const LoginPage(),
+      home: initialLoggedIn ? const HomePage() : const LoginPage(),
     );
   }
 }

@@ -1,5 +1,11 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-import '../../core/theme/app_colors.dart';
+import 'package:provider/provider.dart';
+import 'package:image_picker/image_picker.dart';
+import '../../../core/theme/app_colors.dart';
+import '../controllers/home_controller.dart';
+import '../../auth/controllers/auth_controller.dart';
+import '../../auth/views/login_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,6 +17,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   int _selectedTab = 0;
   String _selectedClassroom = 'Classroom A';
+  File? _profileImage;
 
   // AnimationController untuk fade-in saat berpindah tab
   late AnimationController _homeFadeController;
@@ -19,9 +26,22 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late AnimationController _trackerFadeController;
   late Animation<double> _trackerFadeAnimation;
 
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      setState(() {
+        _profileImage = File(pickedFile.path);
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<HomeController>(context, listen: false).fetchActivities();
+    });
     _homeFadeController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800),
@@ -93,15 +113,20 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       title: Row(
         children: [
 
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: AppColors.primaryGreen.withValues(alpha: 0.4), width: 1.5),
-              image: const DecorationImage(
-                image: NetworkImage('https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150'),
-                fit: BoxFit.cover,
+          GestureDetector(
+            onTap: _pickImage,
+            child: Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: AppColors.primaryGreen.withValues(alpha: 0.4), width: 1.5),
+                image: DecorationImage(
+                  image: _profileImage != null
+                      ? FileImage(_profileImage!) as ImageProvider
+                      : const NetworkImage('https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150'),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),
@@ -137,34 +162,21 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         ],
       ),
       actions: [
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            IconButton(
-              icon: const Icon(
-                Icons.notifications_none_rounded,
-                color: AppColors.textPrimary,
-                size: 24,
-              ),
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('No new notifications')),
-                );
-              },
-            ),
-            Positioned(
-              top: 12,
-              right: 12,
-              child: Container(
-                width: 7,
-                height: 7,
-                decoration: const BoxDecoration(
-                  color: Colors.redAccent,
-                  shape: BoxShape.circle,
-                ),
-              ),
-            ),
-          ],
+        IconButton(
+          icon: const Icon(
+            Icons.logout_rounded,
+            color: AppColors.textPrimary,
+            size: 24,
+          ),
+          onPressed: () async {
+            await Provider.of<AuthController>(context, listen: false).logout();
+            if (mounted) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+              );
+            }
+          },
         ),
         const SizedBox(width: 8),
       ],
@@ -703,184 +715,210 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   Widget _buildTimelineTracker() {
+    return Consumer<HomeController>(
+      builder: (context, controller, child) {
+        if (controller.isLoading) {
+          return const Center(
+            child: Padding(
+              padding: EdgeInsets.all(24.0),
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
 
-    final List<Map<String, dynamic>> items = [
-      {
-        'time': '12:00 PM',
-        'activity': 'Lunch',
-        'desc': 'Liam ate healthy organic purees and mashed veggies.',
-        'icon': Icons.restaurant_rounded,
-        'color': const Color(0xFFE65100),
-        'bgColor': const Color(0xFFFFF3E0),
-        'tag': 'Ate well',
-        'isLast': false,
-      },
-      {
-        'time': '10:00 AM',
-        'activity': 'Snack Time',
-        'desc': 'Apple slices and organic crackers.',
-        'icon': Icons.local_cafe_rounded,
-        'color': const Color(0xFF0277BD),
-        'bgColor': const Color(0xFFE1F5FE),
-        'tag': 'Ate well',
-        'isLast': false,
-      },
-      {
-        'time': '09:00 AM',
-        'activity': 'Art Activity',
-        'desc': 'Finger painting activity with custom wash colors.',
-        'icon': Icons.palette_rounded,
-        'color': const Color(0xFF651FFF),
-        'bgColor': const Color(0xFFF3ECFF),
-        'tag': null,
-        'isLast': true,
-      },
-    ];
+        if (controller.errorMessage.isNotEmpty) {
+          return Center(child: Text(controller.errorMessage, style: const TextStyle(color: Colors.red)));
+        }
 
-    return Column(
-      children: items.map((item) {
-        return IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
+        if (controller.activities.isEmpty) {
+          return const Center(child: Text('No activities yet.'));
+        }
 
-              Column(
+        return Column(
+          children: controller.activities.asMap().entries.map((entry) {
+            final index = entry.key;
+            final activity = entry.value;
+            final isLast = index == controller.activities.length - 1;
+            
+            // Replicate original design colorful styles
+            final List<Map<String, dynamic>> styles = [
+              {
+                'icon': Icons.restaurant_rounded,
+                'color': const Color(0xFFE65100),
+                'bgColor': const Color(0xFFFFF3E0),
+                'tag': 'Ate well',
+              },
+              {
+                'icon': Icons.apple,
+                'color': Colors.white,
+                'bgColor': AppColors.primaryGreen,
+                'isApple': true,
+                'tag': 'Ate well',
+              },
+              {
+                'icon': Icons.palette_rounded,
+                'color': const Color(0xFF651FFF),
+                'bgColor': const Color(0xFFF3ECFF),
+              },
+              {
+                'icon': Icons.sports_esports_rounded,
+                'color': const Color(0xFF0277BD),
+                'bgColor': const Color(0xFFE1F5FE),
+              },
+              {
+                'icon': Icons.menu_book_rounded,
+                'color': const Color(0xFFC2185B),
+                'bgColor': const Color(0xFFFCE4EC),
+              },
+            ];
+
+            final style = styles[index % styles.length];
+            final time = '${9 + (index % 12)}:00 AM';
+            final icon = style['icon'] as IconData;
+            final iconColor = style['color'] as Color;
+            final circleColor = style['bgColor'] as Color;
+            final isApple = style['isApple'] == true;
+            final tag = style['tag'] as String?;
+
+            return IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Container(
-                    width: 38,
-                    height: 38,
-                    decoration: BoxDecoration(
-                      color: item['time'] == '10:00 AM'
-                          ? AppColors.primaryGreen
-                          : const Color(0xFFF1F3F5),
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.03),
-                          blurRadius: 4,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    alignment: Alignment.center,
-                    child: item['time'] == '10:00 AM'
-                        ? const Icon(
-                            Icons.apple,
-                            color: Colors.white,
-                            size: 22,
-                          )
-                        : Icon(
-                            item['icon'] as IconData,
-                            color: const Color(0xFF607D8B),
-                            size: 18,
-                          ),
-                  ),
-                  Expanded(
-                    child: item['isLast'] as bool
-                        ? const SizedBox()
-                        : Container(
-                            width: 2.0,
-                            color: const Color(0xFFECEFF1),
-                          ),
-                  ),
-                ],
-              ),
-              const SizedBox(width: 16),
-
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 20.0),
-                  child: Container(
-                    padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: AppColors.border, width: 0.8),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.015),
-                          blurRadius: 6,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  item['activity'] as String,
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w700,
-                                    color: AppColors.textPrimary,
-                                  ),
-                                ),
-                                if (item['time'] == '10:00 AM') ...[
-                                  const SizedBox(width: 6),
-                                  Container(
-                                    width: 7,
-                                    height: 7,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(color: const Color(0xFFEC407A), width: 1.5),
-                                    ),
-                                  ),
-                                ],
-                              ],
-                            ),
-                            Text(
-                              item['time'] as String,
-                              style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w700,
-                                color: item['time'] == '10:00 AM'
-                                    ? AppColors.primaryGreen
-                                    : AppColors.textSecondary,
-                              ),
+                  Column(
+                    children: [
+                      Container(
+                        width: 38,
+                        height: 38,
+                        decoration: BoxDecoration(
+                          color: circleColor,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.03),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 6),
-                        Text(
-                          item['desc'] as String,
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: AppColors.textSecondary,
-                            height: 1.4,
-                          ),
+                        alignment: Alignment.center,
+                        child: Icon(
+                          icon,
+                          color: iconColor,
+                          size: isApple ? 22 : 18,
                         ),
-                        if (item['tag'] != null) ...[
-                          const SizedBox(height: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryGreenLight,
-                              borderRadius: BorderRadius.circular(8),
+                      ),
+                      Expanded(
+                        child: isLast
+                            ? const SizedBox()
+                            : Container(
+                                width: 2.0,
+                                color: const Color(0xFFECEFF1),
+                              ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 20.0),
+                      child: Container(
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(color: AppColors.border, width: 0.8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.015),
+                              blurRadius: 6,
+                              offset: const Offset(0, 2),
                             ),
-                            child: Text(
-                              item['tag'] as String,
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Row(
+                                    children: [
+                                      Flexible(
+                                        child: Text(
+                                          activity.title,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w700,
+                                            color: AppColors.textPrimary,
+                                          ),
+                                        ),
+                                      ),
+                                      if (isApple) ...[
+                                        const SizedBox(width: 6),
+                                        Container(
+                                          width: 7,
+                                          height: 7,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            border: Border.all(color: const Color(0xFFEC407A), width: 1.5),
+                                          ),
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  time,
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w700,
+                                    color: isApple ? AppColors.primaryGreen : AppColors.textSecondary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              activity.body,
                               style: const TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.w700,
-                                color: AppColors.primaryGreenDark,
+                                fontSize: 12,
+                                color: AppColors.textSecondary,
+                                height: 1.4,
                               ),
                             ),
-                          ),
-                        ],
-                      ],
+                            if (tag != null) ...[
+                              const SizedBox(height: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                decoration: BoxDecoration(
+                                  color: AppColors.primaryGreenLight,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  tag,
+                                  style: const TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.primaryGreenDark,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
+            );
+          }).toList(),
         );
-      }).toList(),
+      },
     );
   }
 
