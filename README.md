@@ -114,7 +114,7 @@ flutter run
 
 ## 👨‍💻 Pengembang
 
-Proyek ini dikembangkan oleh **daffarizki190** sebagai tugas Ujian Akhir Semester (UAS) mata kuliah **Mobile Computing**.
+Proyek ini dikembangkan oleh **Daffa Rizki Ariyanto** sebagai tugas Ujian Akhir Semester (UAS) mata kuliah **Mobile Computing**.
 
 ---
 
