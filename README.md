@@ -12,6 +12,20 @@ Lihat desain UI/UX lengkap proyek ini di Figma:
 
 ---
 
+## 📸 Screenshots
+
+Berikut adalah beberapa tampilan dari aplikasi TinySteps Day Care:
+
+<div align="center">
+  <img src="assets/screenshots/login.jpg" alt="Login Page" width="250"/>
+  &nbsp;&nbsp;&nbsp;
+  <img src="assets/screenshots/home.jpg" alt="Home Page" width="250"/>
+  &nbsp;&nbsp;&nbsp;
+  <img src="assets/screenshots/tracker.jpg" alt="Tracker Page" width="250"/>
+</div>
+
+---
+
 ## 📱 Fitur Aplikasi (UAS Implementation)
 
 Proyek ini telah dikembangkan dengan mengimplementasikan seluruh kriteria UAS:
