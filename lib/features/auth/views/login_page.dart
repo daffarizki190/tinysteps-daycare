@@ -73,6 +73,21 @@ class _LoginPageState extends State<LoginPage>
     final success = await auth.login(email, password);
     if (success) {
       if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text(
+              'Welcome back, Sarah! Liam is having a great day.',
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+            ),
+            backgroundColor: const Color(0xFF659275),
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            duration: const Duration(seconds: 3),
+          ),
+        );
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const HomePage()),

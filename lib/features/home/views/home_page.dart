@@ -536,12 +536,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Widget _buildTrackerTab() {
     return FadeTransition(
       opacity: _trackerFadeAnimation,
-      child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+      child: RefreshIndicator(
+        onRefresh: () async {
+          await Provider.of<HomeController>(context, listen: false).fetchActivities();
+        },
+        color: AppColors.primaryGreen,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
 
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
