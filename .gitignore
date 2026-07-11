@@ -43,3 +43,11 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Extraneous build outputs
+/.cxx/
+/app/
+/flutter_plugin_android_lifecycle/
+/image_picker_android/
+/shared_preferences_android/
+/reports/

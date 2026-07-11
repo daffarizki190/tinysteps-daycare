@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../controllers/auth_controller.dart';
 import '../../home/views/home_page.dart';
+import '../../../core/localization/language_provider.dart';
 
 // Warna lokal untuk halaman login (tidak bergantung pada AppColors)
 const Color _kBackground       = Color(0xFFF7FAF8);
@@ -73,11 +74,12 @@ class _LoginPageState extends State<LoginPage>
     final success = await auth.login(email, password);
     if (success) {
       if (mounted) {
+        final t = Provider.of<LanguageProvider>(context, listen: false).t;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text(
-              'Welcome back, Sarah! Liam is having a great day.',
-              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+            content: Text(
+              t('Welcome back, Sarah! Liam is having a great day.'),
+              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
             ),
             backgroundColor: const Color(0xFF659275),
             behavior: SnackBarBehavior.floating,
@@ -102,6 +104,7 @@ class _LoginPageState extends State<LoginPage>
 
   @override
   Widget build(BuildContext context) {
+    final t = Provider.of<LanguageProvider>(context).t;
     return Scaffold(
       backgroundColor: _kBackground,
       body: SafeArea(
@@ -120,12 +123,25 @@ class _LoginPageState extends State<LoginPage>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 52),
+                  const SizedBox(height: 16),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: TextButton(
+                      onPressed: () {
+                        Provider.of<LanguageProvider>(context, listen: false).toggleLanguage();
+                      },
+                      child: Text(
+                        Provider.of<LanguageProvider>(context).currentLanguage.toUpperCase(),
+                        style: const TextStyle(color: _kPrimaryGreenDark, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
                   _buildLogo(),
                   const SizedBox(height: 32),
-                  const Text(
-                    'Hello, Parents!',
-                    style: TextStyle(
+                  Text(
+                    t('Hello, Parents!'),
+                    style: const TextStyle(
                       fontSize: 40,
                       fontWeight: FontWeight.w600,
                       color: _kTextTitle,
@@ -135,9 +151,9 @@ class _LoginPageState extends State<LoginPage>
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 10),
-                  const Text(
-                    "Sign in to stay connected with your little one's day.",
-                    style: TextStyle(
+                  Text(
+                    t("Sign in to stay connected with your little one's day."),
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
                       color: _kTextSecondary,
@@ -190,6 +206,7 @@ class _LoginPageState extends State<LoginPage>
 
   // Form input email dan password dengan validasi border warna
   Widget _buildForm() {
+    final t = Provider.of<LanguageProvider>(context).t;
     OutlineInputBorder border(Color color, {double width = 1}) {
       return OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
@@ -211,7 +228,7 @@ class _LoginPageState extends State<LoginPage>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildLabel('Email Address'),
+        _buildLabel(t('Email')),
         const SizedBox(height: 8),
         SizedBox(
           height: 56,
@@ -240,13 +257,13 @@ class _LoginPageState extends State<LoginPage>
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _buildLabel('Password'),
+            _buildLabel(t('Password')),
             GestureDetector(
               onTap: () {
               },
-              child: const Text(
-                'Forgot Password?',
-                style: TextStyle(
+              child: Text(
+                t('Forgot Password?'),
+                style: const TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   color: _kPrimaryGreenDark,
@@ -301,6 +318,7 @@ class _LoginPageState extends State<LoginPage>
 
   Widget _buildSignInButton() {
     final auth = Provider.of<AuthController>(context);
+    final t = Provider.of<LanguageProvider>(context).t;
     return SizedBox(
       width: double.infinity,
       height: 56,
@@ -325,7 +343,7 @@ class _LoginPageState extends State<LoginPage>
                 height: 24,
                 child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
               )
-            : const Text('Sign In'),
+            : Text(t('Sign In')),
       ),
     );
   }
@@ -353,6 +371,7 @@ class _LoginPageState extends State<LoginPage>
   }
 
   Widget _buildOrDivider() {
+    final t = Provider.of<LanguageProvider>(context).t;
     return Row(
       children: [
         const Expanded(
@@ -361,7 +380,7 @@ class _LoginPageState extends State<LoginPage>
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Text(
-            'OR',
+            t('OR'),
             style: TextStyle(
               color: Colors.grey.shade500,
               fontSize: 12,
@@ -378,6 +397,7 @@ class _LoginPageState extends State<LoginPage>
   }
 
   Widget _buildBiometricButton() {
+    final t = Provider.of<LanguageProvider>(context).t;
     return SizedBox(
       width: double.infinity,
       height: 56,
@@ -397,9 +417,9 @@ class _LoginPageState extends State<LoginPage>
           children: [
             Icon(Icons.fingerprint, size: 22, color: _kPrimaryGreen),
             const SizedBox(width: 10),
-            const Text(
-              'Login with Biometrics',
-              style: TextStyle(
+            Text(
+              t('Login with Biometrics'),
+              style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
                 color: _kTextSecondary,

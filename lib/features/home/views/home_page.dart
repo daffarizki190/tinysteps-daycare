@@ -6,6 +6,7 @@ import '../../../core/theme/app_colors.dart';
 import '../controllers/home_controller.dart';
 import '../../auth/controllers/auth_controller.dart';
 import '../../auth/views/login_page.dart';
+import '../../../core/localization/language_provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -40,7 +41,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<HomeController>(context, listen: false).fetchActivities();
+      final lang = Provider.of<LanguageProvider>(context, listen: false).currentLanguage;
+      Provider.of<HomeController>(context, listen: false).fetchActivities(langCode: lang);
     });
     _homeFadeController = AnimationController(
       vsync: this,
@@ -105,6 +107,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   // AppBar dengan avatar orang tua, nama app, dan notifikasi
   PreferredSizeWidget _buildAppBar() {
+    final langProvider = Provider.of<LanguageProvider>(context);
+    final t = langProvider.t;
+
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 0,
@@ -149,8 +154,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   Icon(Icons.park_rounded, size: 14, color: AppColors.primaryGreenDark.withValues(alpha: 0.8)),
                 ],
               ),
-              const Text(
-                'Hello, Sarah',
+              Text(
+                t('Hello, Sarah'),
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
@@ -162,6 +167,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         ],
       ),
       actions: [
+        TextButton(
+          onPressed: () {
+            langProvider.toggleLanguage();
+            // Fetch activities again after toggling
+            Provider.of<HomeController>(context, listen: false).fetchActivities(
+                langCode: Provider.of<LanguageProvider>(context, listen: false).currentLanguage);
+          },
+          child: Text(
+            langProvider.currentLanguage.toUpperCase(),
+            style: const TextStyle(color: AppColors.primaryGreenDark, fontWeight: FontWeight.bold),
+          ),
+        ),
         IconButton(
           icon: const Icon(
             Icons.logout_rounded,
@@ -534,11 +551,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
 
   Widget _buildTrackerTab() {
+    final t = Provider.of<LanguageProvider>(context).t;
     return FadeTransition(
       opacity: _trackerFadeAnimation,
       child: RefreshIndicator(
         onRefresh: () async {
-          await Provider.of<HomeController>(context, listen: false).fetchActivities();
+          final lang = Provider.of<LanguageProvider>(context, listen: false).currentLanguage;
+          await Provider.of<HomeController>(context, listen: false).fetchActivities(langCode: lang);
         },
         color: AppColors.primaryGreen,
         child: SingleChildScrollView(
@@ -551,9 +570,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Live Camera',
-                  style: TextStyle(
+                Text(
+                  t('Live Camera'),
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w800,
                     color: AppColors.textPrimary,
@@ -572,16 +591,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Daily Tracker',
-                  style: TextStyle(
+                Text(
+                  t('Daily Tracker'),
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w800,
                     color: AppColors.textPrimary,
                   ),
                 ),
                 Text(
-                  'Today',
+                  t('Today'),
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
@@ -602,6 +621,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   Widget _buildClassroomDropdown() {
+    final t = Provider.of<LanguageProvider>(context).t;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
       decoration: BoxDecoration(
@@ -629,7 +649,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               .map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
-              child: Text(value),
+              child: Text(t(value)),
             );
           }).toList(),
         ),
@@ -723,6 +743,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Widget _buildTimelineTracker() {
     return Consumer<HomeController>(
       builder: (context, controller, child) {
+        final t = Provider.of<LanguageProvider>(context).t;
+        
         if (controller.isLoading) {
           return const Center(
             child: Padding(
@@ -737,7 +759,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         }
 
         if (controller.activities.isEmpty) {
-          return const Center(child: Text('No activities yet.'));
+          return Center(child: Text(t('No activities yet.')));
         }
 
         return Column(
@@ -752,14 +774,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 'icon': Icons.restaurant_rounded,
                 'color': const Color(0xFFE65100),
                 'bgColor': const Color(0xFFFFF3E0),
-                'tag': 'Ate well',
+                'tag': t('Ate well'),
               },
               {
                 'icon': Icons.apple,
                 'color': Colors.white,
                 'bgColor': AppColors.primaryGreen,
                 'isApple': true,
-                'tag': 'Ate well',
+                'tag': t('Ate well'),
               },
               {
                 'icon': Icons.palette_rounded,
@@ -967,12 +989,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
 
   Widget _buildBottomNavBar() {
+    final t = Provider.of<LanguageProvider>(context).t;
     final List<Map<String, dynamic>> items = [
-      {'icon': Icons.home_rounded, 'label': 'Home'},
-      {'icon': Icons.analytics_rounded, 'label': 'Tracker'},
-      {'icon': Icons.camera_alt_rounded, 'label': 'Photos'},
-      {'icon': Icons.chat_bubble_outline_rounded, 'label': 'Messages'},
-      {'icon': Icons.person_outline_rounded, 'label': 'Profile'},
+      {'icon': Icons.home_rounded, 'label': t('Home')},
+      {'icon': Icons.analytics_rounded, 'label': t('Tracker')},
+      {'icon': Icons.camera_alt_rounded, 'label': t('Photos')},
+      {'icon': Icons.chat_bubble_outline_rounded, 'label': t('Messages')},
+      {'icon': Icons.person_outline_rounded, 'label': t('Profile')},
     ];
 
     return Container(
