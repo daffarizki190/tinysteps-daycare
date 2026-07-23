@@ -105,64 +105,67 @@ class _LoginPageState extends State<LoginPage>
     return Scaffold(
       backgroundColor: _kBackground,
       body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: AnimatedBuilder(
-            animation: _animationController,
-            builder: (context, child) {
-              return Transform.translate(
-                offset: Offset(0, _slideAnimation.value),
-                child: child,
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 40),
-                  _buildLogo(),
-                  const SizedBox(height: 32),
-                  const Text(
-                    'Hello, Parents!',
-                    style: TextStyle(
-                      fontSize: 38,
-                      fontWeight: FontWeight.w600,
-                      color: _kTextTitle,
-                      letterSpacing: -1.0,
-                      height: 1.2,
+        child: Center( // Center everything instead of just SingleChildScrollView
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: AnimatedBuilder(
+              animation: _animationController,
+              builder: (context, child) {
+                return Transform.translate(
+                  offset: Offset(0, _slideAnimation.value),
+                  child: child,
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 10),
+                    _buildLogo(),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'Hello, Parents!',
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.w600,
+                        color: _kTextTitle,
+                        letterSpacing: -1.0,
+                        height: 1.2,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    "Sign in to stay connected with your little one's day.",
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: _kTextSecondary,
-                      height: 1.5,
+                    const SizedBox(height: 6),
+                    const Text(
+                      "Sign in to stay connected with your little one's day.",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: _kTextSecondary,
+                        height: 1.5,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 36),
-                  _buildForm(),
-                  const SizedBox(height: 12),
-                  _buildRememberAndForgot(),
-                  const SizedBox(height: 20),
-                  _buildSignInButton(),
-                  const SizedBox(height: 6),
-                  errorMessage.isNotEmpty
-                      ? _buildErrorMessage()
-                      : const SizedBox.shrink(),
-                  const SizedBox(height: 28),
-                  _buildOrDivider(),
-                  const SizedBox(height: 20),
-                  _buildSSOButtons(),
-                  const SizedBox(height: 28),
-                  _buildSignUpLink(),
-                  const SizedBox(height: 48),
-                ],
+                    const SizedBox(height: 24),
+                    _buildForm(),
+                    const SizedBox(height: 12),
+                    _buildRememberAndForgot(),
+                    const SizedBox(height: 16),
+                    _buildSignInButton(),
+                    const SizedBox(height: 6),
+                    errorMessage.isNotEmpty
+                        ? _buildErrorMessage()
+                        : const SizedBox.shrink(),
+                    const SizedBox(height: 16),
+                    _buildOrDivider(),
+                    const SizedBox(height: 16),
+                    _buildSSOButtons(),
+                    const SizedBox(height: 16),
+                    _buildSignUpLink(),
+                    const SizedBox(height: 10),
+                  ],
+                ),
               ),
             ),
           ),
@@ -173,23 +176,30 @@ class _LoginPageState extends State<LoginPage>
 
   // ── Logo ───────────────────────────────────────────────────
   Widget _buildLogo() {
-    return Image.asset(
-      'assets/images/daycare_kita_logo.png',
-      width: 150,
-      height: 150,
-      errorBuilder: (context, error, stackTrace) {
-        return Container(
-          width: 120,
-          height: 120,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: const Color(0xFFD4E8D7),
-            border: Border.all(color: _kPrimaryGreen, width: 2.5),
+    return Container(
+      width: 100,
+      height: 100,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
-          child: const Icon(Icons.park_rounded,
-              size: 52, color: _kPrimaryGreenDark),
-        );
-      },
+        ],
+      ),
+      child: ClipOval(
+        child: Image.asset(
+          'assets/images/daycare_kita_logo.png',
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return const Icon(Icons.park_rounded,
+                size: 52, color: _kPrimaryGreenDark);
+          },
+        ),
+      ),
     );
   }
 
@@ -203,13 +213,13 @@ class _LoginPageState extends State<LoginPage>
     }
 
     const TextStyle hintStyle = TextStyle(
-      fontSize: 16,
+      fontSize: 15,
       fontWeight: FontWeight.w400,
       color: _kPlaceholder,
     );
 
     const EdgeInsets fieldPadding = EdgeInsets.symmetric(
-      vertical: 17,
+      vertical: 14,
       horizontal: 16,
     );
 
@@ -218,14 +228,14 @@ class _LoginPageState extends State<LoginPage>
       children: [
         // Email field
         _buildLabel('Email / Username'),
-        const SizedBox(height: 8),
+        const SizedBox(height: 6),
         SizedBox(
-          height: 56,
+          height: 52,
           child: TextField(
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
             onChanged: (value) => setState(() => email = value),
-            style: const TextStyle(fontSize: 16, color: _kTextTitle),
+            style: const TextStyle(fontSize: 15, color: _kTextTitle),
             decoration: InputDecoration(
               hintText: 'parent@example.com',
               hintStyle: hintStyle,
@@ -241,18 +251,18 @@ class _LoginPageState extends State<LoginPage>
             ),
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 16),
 
         // Password field
         _buildLabel('Password'),
-        const SizedBox(height: 8),
+        const SizedBox(height: 6),
         SizedBox(
-          height: 56,
+          height: 52,
           child: TextField(
             controller: _passwordController,
             obscureText: _obscurePassword,
             onChanged: (value) => setState(() => password = value),
-            style: const TextStyle(fontSize: 16, color: _kTextTitle),
+            style: const TextStyle(fontSize: 15, color: _kTextTitle),
             decoration: InputDecoration(
               hintText: '••••••••',
               hintStyle: hintStyle,
@@ -365,7 +375,7 @@ class _LoginPageState extends State<LoginPage>
     final auth = Provider.of<AuthProvider>(context);
     return SizedBox(
       width: double.infinity,
-      height: 56,
+      height: 52,
       child: ElevatedButton(
         onPressed: auth.isLoading ? null : _handleSignIn,
         style: ElevatedButton.styleFrom(
@@ -449,7 +459,7 @@ class _LoginPageState extends State<LoginPage>
         // Google SSO
         SizedBox(
           width: double.infinity,
-          height: 52,
+          height: 48,
           child: OutlinedButton(
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -482,7 +492,7 @@ class _LoginPageState extends State<LoginPage>
                   child: const Icon(Icons.g_mobiledata_rounded,
                       size: 24, color: Color(0xFFDB4437)),
                 ),
-                const SizedBox(width: 10),
+                const SizedBox(width: 8),
                 const Text(
                   'Continue with Google',
                   style: TextStyle(
@@ -496,12 +506,12 @@ class _LoginPageState extends State<LoginPage>
             ),
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 10),
 
         // Apple SSO
         SizedBox(
           width: double.infinity,
-          height: 52,
+          height: 48,
           child: OutlinedButton(
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -525,8 +535,8 @@ class _LoginPageState extends State<LoginPage>
             child: const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.apple_rounded, size: 22, color: _kTextTitle),
-                SizedBox(width: 10),
+                Icon(Icons.apple_rounded, size: 20, color: _kTextTitle),
+                SizedBox(width: 8),
                 Text(
                   'Continue with Apple',
                   style: TextStyle(
