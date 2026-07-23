@@ -131,7 +131,7 @@ class AuthProvider extends ChangeNotifier {
         return false;
       }
     } catch (e) {
-      _errorMessage = 'Database error occurred. Please try again.';
+      _errorMessage = 'Database error. Email might already exist.';
       _isLoading = false;
       notifyListeners();
       return false;

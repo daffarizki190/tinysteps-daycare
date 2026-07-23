@@ -147,71 +147,73 @@ class _RegisterPageState extends State<RegisterPage>
     return Scaffold(
       backgroundColor: _kBackground,
       body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: AnimatedBuilder(
-            animation: _animationController,
-            builder: (context, child) {
-              return Transform.translate(
-                offset: Offset(0, _slideAnimation.value),
-                child: child,
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 16),
-                  // Tombol kembali
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(
-                        Icons.arrow_back_ios_rounded,
-                        color: _kPrimaryGreenDark,
-                        size: 22,
+        child: Center(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: AnimatedBuilder(
+              animation: _animationController,
+              builder: (context, child) {
+                return Transform.translate(
+                  offset: Offset(0, _slideAnimation.value),
+                  child: child,
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 10),
+                    // Tombol kembali
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: const Icon(
+                          Icons.arrow_back_ios_rounded,
+                          color: _kPrimaryGreenDark,
+                          size: 22,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  _buildLogo(),
-                  const SizedBox(height: 28),
-                  const Text(
-                    'Create Account',
-                    style: TextStyle(
-                      fontSize: 34,
-                      fontWeight: FontWeight.w600,
-                      color: _kTextTitle,
-                      letterSpacing: -1.0,
-                      height: 1.2,
+                    _buildLogo(),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'Create Account',
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w600,
+                        color: _kTextTitle,
+                        letterSpacing: -1.0,
+                        height: 1.2,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'Join TinySteps to stay connected\nwith your little one.',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: _kTextSecondary,
-                      height: 1.5,
+                    const SizedBox(height: 6),
+                    const Text(
+                      'Join TinySteps to stay connected\nwith your little one.',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w400,
+                        color: _kTextSecondary,
+                        height: 1.5,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 32),
-                  _buildForm(),
-                  const SizedBox(height: 24),
-                  _buildSignUpButton(),
-                  const SizedBox(height: 6),
-                  errorMessage.isNotEmpty
-                      ? _buildErrorMessage()
-                      : const SizedBox.shrink(),
-                  const SizedBox(height: 28),
-                  _buildSignInLink(),
-                  const SizedBox(height: 48),
-                ],
+                    const SizedBox(height: 20),
+                    _buildForm(),
+                    const SizedBox(height: 20),
+                    _buildSignUpButton(),
+                    const SizedBox(height: 6),
+                    errorMessage.isNotEmpty
+                        ? _buildErrorMessage()
+                        : const SizedBox.shrink(),
+                    const SizedBox(height: 16),
+                    _buildSignInLink(),
+                    const SizedBox(height: 10),
+                  ],
+                ),
               ),
             ),
           ),
@@ -222,23 +224,30 @@ class _RegisterPageState extends State<RegisterPage>
 
   // ── Logo ───────────────────────────────────────────────────
   Widget _buildLogo() {
-    return Image.asset(
-      'assets/images/daycare_kita_logo.png',
-      width: 110,
-      height: 110,
-      errorBuilder: (context, error, stackTrace) {
-        return Container(
-          width: 90,
-          height: 90,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: const Color(0xFFD4E8D7),
-            border: Border.all(color: _kPrimaryGreen, width: 2.5),
+    return Container(
+      width: 90,
+      height: 90,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
-          child: const Icon(Icons.park_rounded,
-              size: 40, color: _kPrimaryGreenDark),
-        );
-      },
+        ],
+      ),
+      child: ClipOval(
+        child: Image.asset(
+          'assets/images/daycare_kita_logo.png',
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return const Icon(Icons.park_rounded,
+                size: 40, color: _kPrimaryGreenDark);
+          },
+        ),
+      ),
     );
   }
 
@@ -252,13 +261,13 @@ class _RegisterPageState extends State<RegisterPage>
     }
 
     const TextStyle hintStyle = TextStyle(
-      fontSize: 16,
+      fontSize: 15,
       fontWeight: FontWeight.w400,
       color: _kPlaceholder,
     );
 
     const EdgeInsets fieldPadding = EdgeInsets.symmetric(
-      vertical: 17,
+      vertical: 14,
       horizontal: 16,
     );
 
@@ -267,15 +276,15 @@ class _RegisterPageState extends State<RegisterPage>
       children: [
         // Field 1: Nama Lengkap
         _buildLabel('Full Name'),
-        const SizedBox(height: 8),
+        const SizedBox(height: 6),
         SizedBox(
-          height: 56,
+          height: 52,
           child: TextField(
             controller: _nameController,
             keyboardType: TextInputType.name,
             textCapitalization: TextCapitalization.words,
             onChanged: (value) => setState(() => fullName = value),
-            style: const TextStyle(fontSize: 16, color: _kTextTitle),
+            style: const TextStyle(fontSize: 15, color: _kTextTitle),
             decoration: InputDecoration(
               hintText: 'Enter your full name',
               hintStyle: hintStyle,
@@ -291,18 +300,18 @@ class _RegisterPageState extends State<RegisterPage>
             ),
           ),
         ),
-        const SizedBox(height: 18),
+        const SizedBox(height: 12),
 
         // Field 2: Email
         _buildLabel('Email'),
-        const SizedBox(height: 8),
+        const SizedBox(height: 6),
         SizedBox(
-          height: 56,
+          height: 52,
           child: TextField(
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
             onChanged: (value) => setState(() => email = value),
-            style: const TextStyle(fontSize: 16, color: _kTextTitle),
+            style: const TextStyle(fontSize: 15, color: _kTextTitle),
             decoration: InputDecoration(
               hintText: 'parent@example.com',
               hintStyle: hintStyle,
@@ -318,18 +327,18 @@ class _RegisterPageState extends State<RegisterPage>
             ),
           ),
         ),
-        const SizedBox(height: 18),
+        const SizedBox(height: 12),
 
         // Field 3: Password
         _buildLabel('Password'),
-        const SizedBox(height: 8),
+        const SizedBox(height: 6),
         SizedBox(
-          height: 56,
+          height: 52,
           child: TextField(
             controller: _passwordController,
             obscureText: _obscurePassword,
             onChanged: (value) => setState(() => password = value),
-            style: const TextStyle(fontSize: 16, color: _kTextTitle),
+            style: const TextStyle(fontSize: 15, color: _kTextTitle),
             decoration: InputDecoration(
               hintText: '••••••••',
               hintStyle: hintStyle,
@@ -360,18 +369,18 @@ class _RegisterPageState extends State<RegisterPage>
             ),
           ),
         ),
-        const SizedBox(height: 18),
+        const SizedBox(height: 12),
 
         // Field 4: Konfirmasi Password
         _buildLabel('Confirm Password'),
-        const SizedBox(height: 8),
+        const SizedBox(height: 6),
         SizedBox(
-          height: 56,
+          height: 52,
           child: TextField(
             controller: _confirmController,
             obscureText: _obscureConfirmPassword,
             onChanged: (value) => setState(() => confirmPassword = value),
-            style: const TextStyle(fontSize: 16, color: _kTextTitle),
+            style: const TextStyle(fontSize: 15, color: _kTextTitle),
             decoration: InputDecoration(
               hintText: '••••••••',
               hintStyle: hintStyle,
@@ -412,7 +421,7 @@ class _RegisterPageState extends State<RegisterPage>
       builder: (context, auth, child) {
         return SizedBox(
           width: double.infinity,
-          height: 56,
+          height: 52,
           child: ElevatedButton(
             onPressed: auth.isLoading ? null : _handleSignUp,
             style: ElevatedButton.styleFrom(

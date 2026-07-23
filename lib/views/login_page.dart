@@ -157,11 +157,7 @@ class _LoginPageState extends State<LoginPage>
                     errorMessage.isNotEmpty
                         ? _buildErrorMessage()
                         : const SizedBox.shrink(),
-                    const SizedBox(height: 16),
-                    _buildOrDivider(),
-                    const SizedBox(height: 16),
-                    _buildSSOButtons(),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 24),
                     _buildSignUpLink(),
                     const SizedBox(height: 10),
                   ],
@@ -297,7 +293,7 @@ class _LoginPageState extends State<LoginPage>
     );
   }
 
-  // ── Remember Me + Forgot Password ─────────────────────────
+  // ── Remember Me ─────────────────────────
   Widget _buildRememberAndForgot() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -340,31 +336,6 @@ class _LoginPageState extends State<LoginPage>
               ),
             ),
           ],
-        ),
-
-        // Forgot Password
-        GestureDetector(
-          onTap: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: const Text('Forgot Password feature coming soon!'),
-                backgroundColor: _kPrimaryGreenDark,
-                behavior: SnackBarBehavior.floating,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            );
-          },
-          child: const Text(
-            'Forgot Password?',
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: _kPrimaryGreenDark,
-              letterSpacing: 0.14,
-            ),
-          ),
         ),
       ],
     );
@@ -426,133 +397,6 @@ class _LoginPageState extends State<LoginPage>
     );
   }
 
-  // ── OR divider ─────────────────────────────────────────────
-  Widget _buildOrDivider() {
-    return Row(
-      children: [
-        const Expanded(
-          child: Divider(color: Color(0xFFD1D5DB), thickness: 1),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Text(
-            'OR',
-            style: TextStyle(
-              color: Colors.grey.shade500,
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1.0,
-            ),
-          ),
-        ),
-        const Expanded(
-          child: Divider(color: Color(0xFFD1D5DB), thickness: 1),
-        ),
-      ],
-    );
-  }
-
-  // ── SSO Buttons (Google & Apple) ───────────────────────────
-  Widget _buildSSOButtons() {
-    return Column(
-      children: [
-        // Google SSO
-        SizedBox(
-          width: double.infinity,
-          height: 48,
-          child: OutlinedButton(
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: const Text('Google Sign-In coming soon!'),
-                  backgroundColor: _kPrimaryGreenDark,
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              );
-            },
-            style: OutlinedButton.styleFrom(
-              side: const BorderSide(color: _kBorder, width: 1.5),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              backgroundColor: _kSurface,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 20,
-                  height: 20,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: const Icon(Icons.g_mobiledata_rounded,
-                      size: 24, color: Color(0xFFDB4437)),
-                ),
-                const SizedBox(width: 8),
-                const Text(
-                  'Continue with Google',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: _kTextTitle,
-                    letterSpacing: 0.14,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 10),
-
-        // Apple SSO
-        SizedBox(
-          width: double.infinity,
-          height: 48,
-          child: OutlinedButton(
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: const Text('Apple Sign-In coming soon!'),
-                  backgroundColor: _kPrimaryGreenDark,
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              );
-            },
-            style: OutlinedButton.styleFrom(
-              side: const BorderSide(color: _kBorder, width: 1.5),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              backgroundColor: _kSurface,
-            ),
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.apple_rounded, size: 20, color: _kTextTitle),
-                SizedBox(width: 8),
-                Text(
-                  'Continue with Apple',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: _kTextTitle,
-                    letterSpacing: 0.14,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
 
   // ── Sign Up link ───────────────────────────────────────────
   Widget _buildSignUpLink() {
